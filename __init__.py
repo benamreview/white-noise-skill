@@ -43,7 +43,7 @@ class WhiteNoise(MycroftSkill):
         MycroftSkill.__init__(self)
         self.endtime = None;
         self.process = None
-        
+        self.stopped = False;
     def initialize(self):
         #Build play list
         self.play_list = {
@@ -128,7 +128,7 @@ class WhiteNoise(MycroftSkill):
         # Check if there is an expired timer
         now = datetime.now()
         # Calc remaining time and show using faceplate
-        if (self.timer["expires"] > now):
+        if (self.timer["expires"] > now and self.stopped == False):
             # Timer still running
             remaining = (self.timer["expires"] - now).seconds
             print (remaining)
@@ -140,8 +140,7 @@ class WhiteNoise(MycroftSkill):
             # Timer has expired but not been cleared, flash eyes
             overtime = (now - self.timer["expires"]).seconds
             print (overtime)
-            if self.process is not None: #check whether it has been stopped previously
-                self.speak("Playtime is over!")
+            self.speak("Playtime is over!")
             self.cancel_scheduled_event('ShowTimer')
             self.stop()
     def stop_playing(self):
@@ -154,8 +153,8 @@ class WhiteNoise(MycroftSkill):
     )
     def stop(self):
         # abort current laugh
-        stopped = self.stop_playing()    
-        return stopped
+        self.stopped = self.stop_playing()    
+        return self.stopped
 
 
 def create_skill():
