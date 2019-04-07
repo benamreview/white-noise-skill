@@ -170,11 +170,11 @@ class WhiteNoise(MycroftSkill):
         # Calc remaining time and show using faceplate
         if (self.timer["expires"] > now):
             # Timer still running
-            remaining = (timer["expires"] - now).seconds
+            remaining = (self.timer["expires"] - now).seconds
             print (remaining)
         else:
             # Timer has expired but not been cleared, flash eyes
-            overtime = (now - timer["expires"]).seconds
+            overtime = (now - self.timer["expires"]).seconds
             print (overtime)
             stop()
     def stop_laugh(self):
