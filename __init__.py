@@ -31,7 +31,7 @@ from os import listdir
 from os.path import join, abspath, dirname
 import random
 from datetime import timedelta, datetime
-from mycroft.util.parse import match_one, extract_datetime
+from mycroft.util.parse import match_one, extract_datetime, normalize
 
 
 class WhiteNoise(MycroftSkill):
