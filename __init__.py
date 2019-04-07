@@ -40,6 +40,7 @@ class WhiteNoise(MycroftSkill):
         MycroftSkill.__init__(self)
         self.random_laugh = False
         self.sounds = {"male": [], "female": []}
+        self.endtime = None;
         if "gender" not in self.settings:
             self.settings["gender"] = "male"
         if "sounds_dir" not in self.settings:
@@ -115,32 +116,41 @@ class WhiteNoise(MycroftSkill):
         print (extract)
         if extract:
             dt = extract[0]
+            self.endtime = extract[0]
             utt = extract[1]
-        
-        if message.data.get('sound') is not None:
-            print("inside not None")
-            title = message.data.get('sound')
-            score = match_one(title, self.play_list)
-            print(score)
-            if score[1] > 0.5:
-                self.process = play_wav(score[0])
+        while (datetime.now() < self.endtime):
+            print("Current Time:" )
+            print(datetime.now())
+            print(self.endtime)
+            if message.data.get('sound') is not None:
+                print("inside not None")
+                title = message.data.get('sound')
+                score = match_one(title, self.play_list)
+                print(score)
+                if score[1] > 0.5:
+                    self.process = play_wav(score[0])
+                else:
+                    return None
+                    self.speak('Sorry I could not find that sound in my library')
             else:
-                return None
-                self.speak('Sorry I could not find that sound in my library')
-        else:
-            print("inside None")
-            story_file = list(self.play_list.values())
-            story_file = random.choice(story_file)
-            print(story_file)
-            #if os.path.isfile(story_file):
-            wait_while_speaking()
-            self.process = play_wav(story_file)
-            fname = story_file
-            with contextlib.closing(wave.open(fname,'r')) as f:
-                frames = f.getnframes()
-                rate = f.getframerate()
-                duration = frames / float(rate)
-                print(duration)
+                print("inside None")
+                story_file = list(self.play_list.values())
+                story_file = random.choice(story_file)
+                print(story_file)
+                #if os.path.isfile(story_file):
+                wait_while_speaking()
+                self.process = play_wav(story_file)
+                fname = story_file
+                with contextlib.closing(wave.open(fname,'r')) as f:
+                    frames = f.getnframes()
+                    rate = f.getframerate()
+                    duration = frames / float(rate)
+                    print(duration)
+                    self.schedule_event(self.handle_loop_whitenoise,
+                    datetime.now() + timedelta(
+                    seconds=math.ceil(duration)),
+                    name='loop_whitenoise')
+
 
 ##    #Pick story by title
 ##    @intent_file_handler('noise.white.intent')
