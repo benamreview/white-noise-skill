@@ -123,7 +123,7 @@ class WhiteNoise(MycroftSkill):
         while (utc.localize(datetime.now()) < self.endtime):
             print("Current Time:" )
             print(utc.localize(datetime.now()))
-            print(utc.localize(self.endtime))
+            print(self.endtime)
             if message.data.get('sound') is not None:
                 print("inside not None")
                 title = message.data.get('sound')
