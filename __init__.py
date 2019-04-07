@@ -178,9 +178,6 @@ class WhiteNoise(MycroftSkill):
             overtime = (now - timer["expires"]).seconds
             print (overtime)
             stop()
-
-
-                timer["announced"] = True
     def stop_laugh(self):
         if self.process is not None:
             self.process.terminate()
