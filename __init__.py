@@ -43,7 +43,7 @@ class WhiteNoise(MycroftSkill):
             self.settings["gender"] = "male"
         if "sounds_dir" not in self.settings:
             self.settings["sounds_dir"] = join(dirname(__file__), "sounds")
-        self.p = None
+        self.process = None
         self.settings.set_changed_callback(self._fix_gender)
         
 
@@ -110,11 +110,11 @@ class WhiteNoise(MycroftSkill):
 ##        
 ##        sound = random.choice(self.sounds[self.settings["gender"]])
 ##        if ".mp3" in sound:
-##            self.p = play_mp3(sound)
+##            self.process = play_mp3(sound)
 ##        elif ".ogg" in sound:
-##            self.p = play_ogg(sound)
+##            self.process = play_ogg(sound)
 ##        else:
-##            self.p = play_wav(sound)
+##            self.process = play_wav(sound)
 ##    def laugh(self):
 ##        # dont laugh over a speech message
 ##        if is_speaking():
@@ -122,11 +122,11 @@ class WhiteNoise(MycroftSkill):
 ##
 ##        sound = random.choice(self.sounds[self.settings["gender"]])
 ##        if ".mp3" in sound:
-##            self.p = play_mp3(sound)
+##            self.process = play_mp3(sound)
 ##        elif ".ogg" in sound:
-##            self.p = play_ogg(sound)
+##            self.process = play_ogg(sound)
 ##        else:
-##            self.p = play_wav(sound)
+##            self.process = play_wav(sound)
 ##
 ##    @intent_file_handler("Laugh.intent")
 ##    def handle_laugh_intent(self, message):
@@ -166,8 +166,8 @@ class WhiteNoise(MycroftSkill):
 ##                            name='random_laugh')
 
     def stop_laugh(self):
-        if self.p is not None:
-            self.p.terminate()
+        if self.process is not None:
+            self.process.terminate()
             return True
         return False
 
