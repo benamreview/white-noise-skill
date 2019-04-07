@@ -73,9 +73,9 @@ class WhiteNoise(MycroftSkill):
         self.add_event("speak", self.stop_laugh)
         #Build play list
         self.play_list = {
-            'ocean': join(abspath(dirname(__file__)), 'sound', 'ocean.wav'),    
-            'wind': join(abspath(dirname(__file__)), 'sound', 'wind.wav'),
-            'train': join(abspath(dirname(__file__)), 'sound', 'rain.wav'),
+            'ocean': join(abspath(dirname(__file__)), 'sounds', 'ocean.wav'),    
+            'wind': join(abspath(dirname(__file__)), 'sounds', 'wind.wav'),
+            'train': join(abspath(dirname(__file__)), 'sounds', 'rain.wav'),
         
         }
         
