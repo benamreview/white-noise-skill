@@ -31,7 +31,7 @@ from os import listdir
 from os.path import join, abspath, dirname
 import random
 from datetime import timedelta, datetime
-from mycroft.util.parse import match_one
+from mycroft.util.parse import match_one, extract_datetime
 
 
 class WhiteNoise(MycroftSkill):
@@ -79,12 +79,43 @@ class WhiteNoise(MycroftSkill):
         
         }
         
-    #Play random story from list
+    #Play random noise or a specific noise from list
     @intent_file_handler('noise.white.intent')
     def handle_stories_bedtime(self, message):
         print("inside handler")
         wait_while_speaking()
         print (message.data.get('sound'))
+        if message.data.get('sound') is not None:
+            print("inside not None")
+            title = message.data.get('sound')
+            score = match_one(title, self.play_list)
+            print(score)
+            if score[1] > 0.5:
+                self.process = play_wav(score[0])
+            else:
+                return None
+                self.speak('Sorry I could not find that sound in my library')
+        else:
+            print("inside None")
+            story_file = list(self.play_list.values())
+            story_file = random.choice(story_file)
+            print(story_file)
+            #if os.path.isfile(story_file):
+            wait_while_speaking()
+            self.process = play_wav(story_file)
+    #Handles Loop Call
+    @intent_file_handler('whitenoiseloop.intent')
+    def handle_stories_bedtime(self, message):
+        print("inside loop handler")
+        wait_while_speaking()
+        print (message.data.get('sound'))
+        utt = normalize(message.data.get('utterance', "").lower())
+        extract = extract_datetime(utt)
+        if extract:
+            dt = extract[0]
+            utt = extract[1]
+            print (dt)
+            print (utt)
         if message.data.get('sound') is not None:
             print("inside not None")
             title = message.data.get('sound')
