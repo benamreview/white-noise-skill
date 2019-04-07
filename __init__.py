@@ -35,6 +35,7 @@ from mycroft.util.parse import match_one, extract_datetime, normalize
 import wave
 import contextlib
 import pytz
+import math
 
 class WhiteNoise(MycroftSkill):
     def __init__(self):
