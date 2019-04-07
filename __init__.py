@@ -44,6 +44,7 @@ class WhiteNoise(MycroftSkill):
         self.endtime = None;
         self.process = None
         self.stopped = False;
+        self.audio_length = 0;
     def initialize(self):
         #Build play list
         self.play_list = {
@@ -84,6 +85,7 @@ class WhiteNoise(MycroftSkill):
         wait_while_speaking()
         print (message.data.get('sound'))
         self.stopped = False;
+        now = datetime.now()
         if message.data.get('sound') is not None:
             print("inside not None")
             title = message.data.get('sound')
@@ -91,6 +93,13 @@ class WhiteNoise(MycroftSkill):
             print(score)
             if score[1] > 0.5:
                 self.process = play_wav(score[0])
+                fname = sound[0]
+                with contextlib.closing(wave.open(fname,'r')) as f:
+                frames = f.getnframes()
+                rate = f.getframerate()
+                duration = frames / float(rate)
+                self.song_length = duration
+                print(duration)
             else:
                 return None
                 self.speak('Sorry I could not find that sound in my library')
@@ -103,6 +112,16 @@ class WhiteNoise(MycroftSkill):
             wait_while_speaking()
             self.process = play_wav(sound_file)
             fname = sound_file
+            with contextlib.closing(wave.open(fname,'r')) as f:
+                frames = f.getnframes()
+                rate = f.getframerate()
+                duration = frames / float(rate)
+                self.audio_length = duration
+                print(duration)
+                self.songTimer = {
+                "file": sound_file,
+                "expires": now + timedelta(seconds=self.audio_length)
+                }
         
         #Extract Time and Duration of Audio Play
         utt = normalize(message.data.get('utterance', "").lower())
@@ -115,13 +134,14 @@ class WhiteNoise(MycroftSkill):
         utc=pytz.UTC
         print("Current Duration:" )
         secs = self.endtime.total_seconds()
-        now = datetime.now()
+        
         time_expires = now + timedelta(seconds=secs)
         self.timer = {
                  "duration": secs,
                  "expires": time_expires
-                 }
+                 } 
         self.update_time(None)
+        self.check_replay(None)
                 
                     
     def update_time(self, message):
@@ -146,6 +166,42 @@ class WhiteNoise(MycroftSkill):
                 self.speak("Playtime is over!")
             self.cancel_scheduled_event('ShowTimer')
             self.stop()
+    def check_replay(self, message):
+        print("inside check_replay")
+        # Check if there is an expired timer
+        now = datetime.now()
+        # Calc remaining time and show using faceplate
+        if (self.songTimer["expires"] > now):
+            if self.stopped == False:
+                # Timer still running
+                remaining = (self.timer["expires"] - now).seconds
+                print (remaining)
+                self.cancel_scheduled_event('Replay')
+                self.schedule_repeating_event(self.check_replay,
+                                              None, 1,
+                                              name='Replay')
+        else:
+            # Timer has expired but not been cleared, flash eyes
+            overtime = (now - self.timer["expires"]).seconds
+            print (overtime)
+            if (self.stopped == False):
+                self.speak("Audio is over! Looping")
+            self.cancel_scheduled_event('Replay')
+            sound_file = self.songTimer["file"]
+            self.process = play_wav(sound_file)
+            with contextlib.closing(wave.open(fname,'r')) as f:
+                frames = f.getnframes()
+                rate = f.getframerate()
+                duration = frames / float(rate)
+                self.audio_length = duration
+                print(duration)
+                self.songTimer = {
+                "file": sound_file,
+                "expires": now + timedelta(seconds=self.audio_length)
+                }
+            self.schedule_repeating_event(self.check_replay,
+                                              None, 1,
+                                              name='Replay')    
     def stop_playing(self):
         if self.process is not None:
             self.process.terminate()
