@@ -114,6 +114,38 @@ class WhiteNoise(MycroftSkill):
         print("inside loop handler")
         wait_while_speaking()
         print (message.data.get('sound'))
+        if message.data.get('sound') is not None:
+            print("inside not None")
+            title = message.data.get('sound')
+            score = match_one(title, self.play_list)
+            print(score)
+            if score[1] > 0.5:
+                self.process = play_wav(score[0])
+            else:
+                return None
+                self.speak('Sorry I could not find that sound in my library')
+        else:
+            print("inside None")
+            story_file = list(self.play_list.values())
+            story_file = random.choice(story_file)
+            print(story_file)
+            #if os.path.isfile(story_file):
+            wait_while_speaking()
+            self.process = play_wav(story_file)
+            fname = story_file
+            with contextlib.closing(wave.open(fname,'r')) as f:
+                frames = f.getnframes()
+                rate = f.getframerate()
+                duration = frames / float(rate)
+                print(duration)
+                time.sleep(duration)
+##                    self.cancel_scheduled_event('loop_whitenoise')
+##                    self.schedule_event(self.handle_loop_whitenoise,
+##                    datetime.now() + timedelta(
+##                    seconds=math.ceil(duration)),
+##                    name='loop_whitenoise')
+
+        #Extract Time and Duration of Audio Play
         utt = normalize(message.data.get('utterance', "").lower())
         extract = extract_duration(utt)
         print (extract)
@@ -122,42 +154,17 @@ class WhiteNoise(MycroftSkill):
             self.endtime = extract[0]
             utt = extract[1]
         utc=pytz.UTC
-        while (True):
-            print("Current Duration:" )
-            print(self.endtime.total_seconds())
-            if message.data.get('sound') is not None:
-                print("inside not None")
-                title = message.data.get('sound')
-                score = match_one(title, self.play_list)
-                print(score)
-                if score[1] > 0.5:
-                    self.process = play_wav(score[0])
-                else:
-                    return None
-                    self.speak('Sorry I could not find that sound in my library')
-            else:
-                print("inside None")
-                story_file = list(self.play_list.values())
-                story_file = random.choice(story_file)
-                print(story_file)
-                #if os.path.isfile(story_file):
-                wait_while_speaking()
-                self.process = play_wav(story_file)
-                fname = story_file
-                with contextlib.closing(wave.open(fname,'r')) as f:
-                    frames = f.getnframes()
-                    rate = f.getframerate()
-                    duration = frames / float(rate)
-                    print(duration)
-                    time.sleep(duration)
-##                    self.cancel_scheduled_event('loop_whitenoise')
-##                    self.schedule_event(self.handle_loop_whitenoise,
-##                    datetime.now() + timedelta(
-##                    seconds=math.ceil(duration)),
-##                    name='loop_whitenoise')
+        print("Current Duration:" )
+        secs = self.endtime.total_seconds())
+        now = datetime.now()
+        time_expires = now + timedelta(seconds=secs)
+        self.timer = {"
+                 "duration": secs,
+                 "expires": time_expires
+                 }
+        update_time(None)
                 
                     
-        stop(self)
 
 
 ##    #Pick story by title
@@ -233,10 +240,22 @@ class WhiteNoise(MycroftSkill):
 ##                            datetime.now() + timedelta(
 ##                                seconds=random.randrange(60, 1800)),
 ##                            name='random_laugh')
-    def set_timer(self, duration):
-        self.over=False
-        time.sleep(duration)
-        self.over=True
+    def update_time(self, message):
+        # Check if there is an expired timer
+        now = datetime.now()
+        # Calc remaining time and show using faceplate
+        if (self.timer["expires"] > now):
+            # Timer still running
+            remaining = (timer["expires"] - now).seconds
+            print (remaining)
+        else:
+            # Timer has expired but not been cleared, flash eyes
+            overtime = (now - timer["expires"]).seconds
+            print (overtime)
+            stop()
+
+
+                timer["announced"] = True
     def stop_laugh(self):
         if self.process is not None:
             self.process.terminate()
