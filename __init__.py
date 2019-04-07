@@ -120,7 +120,7 @@ class WhiteNoise(MycroftSkill):
             self.endtime = extract[0]
             utt = extract[1]
         utc=pytz.UTC
-        while (datetime.now() < utc.localize(self.endtime)):
+        while (utc.localize(datetime.now()) < self.endtime):
             print("Current Time:" )
             print(utc.localize(datetime.now()))
             print(utc.localize(self.endtime))
