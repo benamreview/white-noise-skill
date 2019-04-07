@@ -82,6 +82,7 @@ class WhiteNoise(MycroftSkill):
     #Play random story from list
     @intent_file_handler('noise.white.intent')
     def handle_stories_bedtime(self, message):
+        print("inside handler")
         wait_while_speaking()
         story_file = list(self.play_list.values())
         story_file = random.choice(story_file)
@@ -90,18 +91,18 @@ class WhiteNoise(MycroftSkill):
         wait_while_speaking()
         self.process = play_wav(story_file)
 
-    #Pick story by title
-    @intent_file_handler('noise.white.intent')
-    def handle_pick_story(self, message):
-        wait_while_speaking()
-        title = message.data.get('sound')
-        score = match_one(title, self.play_list)
-        print(score)
-        if score[1] > 0.5:
-            self.process = play_wav(score[0])
-        else:
-            return None
-            self.speak('Sorry I could not find that sound in my library')
+##    #Pick story by title
+##    @intent_file_handler('noise.white.intent')
+##    def handle_pick_story(self, message):
+##        wait_while_speaking()
+##        title = message.data.get('sound')
+##        score = match_one(title, self.play_list)
+##        print(score)
+##        if score[1] > 0.5:
+##            self.process = play_wav(score[0])
+##        else:
+##            return None
+##            self.speak('Sorry I could not find that sound in my library')
 ##    def laugh(self):
 ##        # dont laugh over a speech message
 ##        if is_speaking():
