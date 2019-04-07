@@ -124,7 +124,7 @@ class WhiteNoise(MycroftSkill):
         utc=pytz.UTC
         while (True):
             print("Current Duration:" )
-            print(self.endtime)
+            print(self.endtime.total_second())
             if message.data.get('sound') is not None:
                 print("inside not None")
                 title = message.data.get('sound')
