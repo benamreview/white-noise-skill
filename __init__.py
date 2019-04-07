@@ -34,6 +34,7 @@ from datetime import timedelta, datetime
 from mycroft.util.parse import match_one, extract_datetime, normalize
 import wave
 import contextlib
+import pytz
 
 class WhiteNoise(MycroftSkill):
     def __init__(self):
@@ -118,10 +119,11 @@ class WhiteNoise(MycroftSkill):
             dt = extract[0]
             self.endtime = extract[0]
             utt = extract[1]
-        while (datetime.now() < self.endtime):
+        utc=pytz.UTC
+        while (utc.localize(datetime.now()) < utc.localize(self.endtime)):
             print("Current Time:" )
-            print(datetime.now())
-            print(self.endtime)
+            print(utc.localize(datetime.now()))
+            print(utc.localize(self.endtime))
             if message.data.get('sound') is not None:
                 print("inside not None")
                 title = message.data.get('sound')
