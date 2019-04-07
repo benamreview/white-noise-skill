@@ -41,41 +41,10 @@ import time
 class WhiteNoise(MycroftSkill):
     def __init__(self):
         MycroftSkill.__init__(self)
-        self.random_laugh = False
-        self.sounds = {"male": [], "female": []}
         self.endtime = None;
-        if "gender" not in self.settings:
-            self.settings["gender"] = "male"
-        if "sounds_dir" not in self.settings:
-            self.settings["sounds_dir"] = join(dirname(__file__), "sounds")
         self.process = None
-        self.settings.set_changed_callback(self._fix_gender)
         
-
-    def _fix_gender(self):
-        if "f" in self.settings["gender"].lower():
-            self.settings["gender"] = "female"
-        elif "m" in self.settings["gender"].lower():
-            self.settings["gender"] = "male"
-        else:
-            self.settings["gender"] = "robot"
-
     def initialize(self):
-        sounds_dir = join(self.settings["sounds_dir"], "male")
-        self.sounds["male"] = [join(sounds_dir, sound) for sound in
-                               listdir(sounds_dir) if
-                               ".wav" in sound or ".mp3" in
-                               sound]
-        sounds_dir = join(self.settings["sounds_dir"], "female")
-        self.sounds["female"] = [join(sounds_dir, sound) for sound in
-                                 listdir(sounds_dir) if
-                                 ".wav" in sound or ".mp3" in sound]
-        sounds_dir = join(self.settings["sounds_dir"], "robot")
-        self.sounds["robot"] = [join(sounds_dir, sound) for sound in
-                                listdir(sounds_dir) if
-                                ".wav" in sound or ".mp3" in sound]
-        # stop laughs for speech execution
-        self.add_event("speak", self.stop_laugh)
         #Build play list
         self.play_list = {
             'ocean': join(abspath(dirname(__file__)), 'sounds', 'ocean.wav'),    
@@ -86,7 +55,7 @@ class WhiteNoise(MycroftSkill):
         
     #Play random noise or a specific noise from list
     @intent_file_handler('noise.white.intent')
-    def handle_stories_bedtime(self, message):
+    def handle_single_whitenoise(self, message):
         print("inside handler")
         wait_while_speaking()
         print (message.data.get('sound'))
@@ -102,12 +71,12 @@ class WhiteNoise(MycroftSkill):
                 return None            
         else:
             print("inside None")
-            story_file = list(self.play_list.values())
-            story_file = random.choice(story_file)
-            print(story_file)
-            #if os.path.isfile(story_file):
+            sound_file = list(self.play_list.values())
+            sound_file = random.choice(sound_file)
+            print(sound_file)
+            #if os.path.isfile(sound_file):
             wait_while_speaking()
-            self.process = play_wav(story_file)
+            self.process = play_wav(sound_file)
     #Handles Loop Call
     @intent_file_handler('whitenoiseloop.intent')
     def handle_loop_whitenoise(self, message):
@@ -126,24 +95,14 @@ class WhiteNoise(MycroftSkill):
                 self.speak('Sorry I could not find that sound in my library')
         else:
             print("inside None")
-            story_file = list(self.play_list.values())
-            story_file = random.choice(story_file)
-            print(story_file)
-            #if os.path.isfile(story_file):
+            sound_file = list(self.play_list.values())
+            sound_file = random.choice(sound_file)
+            print(sound_file)
+            #if os.path.isfile(sound_file):
             wait_while_speaking()
-            self.process = play_wav(story_file)
-            fname = story_file
-            with contextlib.closing(wave.open(fname,'r')) as f:
-                frames = f.getnframes()
-                rate = f.getframerate()
-                duration = frames / float(rate)
-                print(duration)
-##                    self.cancel_scheduled_event('loop_whitenoise')
-##                    self.schedule_event(self.handle_loop_whitenoise,
-##                    datetime.now() + timedelta(
-##                    seconds=math.ceil(duration)),
-##                    name='loop_whitenoise')
-
+            self.process = play_wav(sound_file)
+            fname = sound_file
+        
         #Extract Time and Duration of Audio Play
         utt = normalize(message.data.get('utterance', "").lower())
         extract = extract_duration(utt)
@@ -181,9 +140,10 @@ class WhiteNoise(MycroftSkill):
             # Timer has expired but not been cleared, flash eyes
             overtime = (now - self.timer["expires"]).seconds
             print (overtime)
+            self.speak("Playtime is over!")
             self.cancel_scheduled_event('ShowTimer')
             self.stop()
-    def stop_laugh(self):
+    def stop_playing(self):
         if self.process is not None:
             self.process.terminate()
             return True
@@ -193,7 +153,7 @@ class WhiteNoise(MycroftSkill):
     )
     def stop(self):
         # abort current laugh
-        stopped = self.stop_laugh()
+        stopped = self.stop_playing()
         # stop random laughs
         if self.random_laugh:
             self.halt_laughing(None)
