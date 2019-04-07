@@ -124,7 +124,7 @@ class WhiteNoise(MycroftSkill):
         utc=pytz.UTC
         while (datetime.now(self.endtime.tzinfo) < self.endtime):
             print("Current Time:" )
-            print(datetime.datetime.now(self.endtime.tzinfo))
+            print(datetime.now(self.endtime.tzinfo))
             print(self.endtime)
             if message.data.get('sound') is not None:
                 print("inside not None")
