@@ -158,7 +158,7 @@ class WhiteNoise(MycroftSkill):
         secs = self.endtime.total_seconds()
         now = datetime.now()
         time_expires = now + timedelta(seconds=secs)
-        self.timer = {"
+        self.timer = {
                  "duration": secs,
                  "expires": time_expires
                  }
