@@ -85,7 +85,7 @@ class WhiteNoise(MycroftSkill):
         print("inside handler")
         wait_while_speaking()
         print (message.data.get('sound'))
-        if message.data.get('sound') != "":
+        if message.data.get('sound') is not None:
             title = message.data.get('sound')
             score = match_one(title, self.play_list)
             print(score)
