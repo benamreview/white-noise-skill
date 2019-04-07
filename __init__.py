@@ -161,7 +161,7 @@ class WhiteNoise(MycroftSkill):
                  "duration": secs,
                  "expires": time_expires
                  }
-        update_time(None)
+        self.update_time(None)
                 
                     
     def update_time(self, message):
