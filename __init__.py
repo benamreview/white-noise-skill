@@ -28,7 +28,7 @@ from adapt.intent import IntentBuilder
 from mycroft.audio import wait_while_speaking, is_speaking
 from mycroft.util import play_wav, play_mp3, play_ogg
 from os import listdir
-from os.path import join, dirname
+from os.path import join, abspath, dirname
 import random
 from datetime import timedelta, datetime
 from mycroft.util.parse import match_one
