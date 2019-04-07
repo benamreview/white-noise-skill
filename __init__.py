@@ -153,11 +153,7 @@ class WhiteNoise(MycroftSkill):
     )
     def stop(self):
         # abort current laugh
-        stopped = self.stop_playing()
-        # stop random laughs
-        if self.random_laugh:
-            self.halt_laughing(None)
-            stopped = True
+        stopped = self.stop_playing()    
         return stopped
 
 
