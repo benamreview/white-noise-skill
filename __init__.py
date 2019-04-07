@@ -115,14 +115,14 @@ class WhiteNoise(MycroftSkill):
         wait_while_speaking()
         print (message.data.get('sound'))
         utt = normalize(message.data.get('utterance', "").lower())
-        extract = extract_datetime(utt)
+        extract = extract_duration(utt)
         print (extract)
         if extract:
-            dt = extract[0]
+            total_duration = extract[0]
             self.endtime = extract[0]
             utt = extract[1]
         utc=pytz.UTC
-        while (datetime.now(self.endtime.tzinfo) < self.endtime):
+        while (True):
             print("Current Time:" )
             print(datetime.now())
             print(datetime.now(self.endtime.tzinfo))
@@ -235,7 +235,10 @@ class WhiteNoise(MycroftSkill):
 ##                            datetime.now() + timedelta(
 ##                                seconds=random.randrange(60, 1800)),
 ##                            name='random_laugh')
-
+    def set_timer(self, duration):
+        self.over=False
+        time.sleep(duration)
+        self.over=True
     def stop_laugh(self):
         if self.process is not None:
             self.process.terminate()
