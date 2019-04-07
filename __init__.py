@@ -31,7 +31,7 @@ from os import listdir
 from os.path import join, abspath, dirname
 import random
 from datetime import timedelta, datetime
-from mycroft.util.parse import match_one, extract_datetime, normalize
+from mycroft.util.parse import match_one, normalize, extract_duration
 import wave
 import contextlib
 import pytz
@@ -123,9 +123,7 @@ class WhiteNoise(MycroftSkill):
             utt = extract[1]
         utc=pytz.UTC
         while (True):
-            print("Current Time:" )
-            print(datetime.now())
-            print(datetime.now(self.endtime.tzinfo))
+            print("Current Duration:" )
             print(self.endtime)
             if message.data.get('sound') is not None:
                 print("inside not None")
