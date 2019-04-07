@@ -32,7 +32,8 @@ from os.path import join, abspath, dirname
 import random
 from datetime import timedelta, datetime
 from mycroft.util.parse import match_one, extract_datetime, normalize
-
+import wave
+import contextlib
 
 class WhiteNoise(MycroftSkill):
     def __init__(self):
@@ -110,14 +111,12 @@ class WhiteNoise(MycroftSkill):
         wait_while_speaking()
         print (message.data.get('sound'))
         utt = normalize(message.data.get('utterance', "").lower())
-        print (utt)
         extract = extract_datetime(utt)
         print (extract)
         if extract:
             dt = extract[0]
             utt = extract[1]
-            print (dt)
-            print (utt)
+        
         if message.data.get('sound') is not None:
             print("inside not None")
             title = message.data.get('sound')
@@ -136,6 +135,12 @@ class WhiteNoise(MycroftSkill):
             #if os.path.isfile(story_file):
             wait_while_speaking()
             self.process = play_wav(story_file)
+            fname = story_file
+            with contextlib.closing(wave.open(fname,'r')) as f:
+                frames = f.getnframes()
+                rate = f.getframerate()
+                duration = frames / float(rate)
+                print(duration)
 
 ##    #Pick story by title
 ##    @intent_file_handler('noise.white.intent')
