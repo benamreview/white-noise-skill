@@ -140,7 +140,7 @@ class WhiteNoise(MycroftSkill):
             # Timer has expired but not been cleared, flash eyes
             overtime = (now - self.timer["expires"]).seconds
             print (overtime)
-            if stopped!= True:
+            if self.process is not None: #check whether it has been stopped previously
                 self.speak("Playtime is over!")
             self.cancel_scheduled_event('ShowTimer')
             self.stop()
