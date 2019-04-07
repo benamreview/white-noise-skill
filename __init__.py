@@ -83,6 +83,7 @@ class WhiteNoise(MycroftSkill):
         print("inside loop handler")
         wait_while_speaking()
         print (message.data.get('sound'))
+        self.stopped = False;
         if message.data.get('sound') is not None:
             print("inside not None")
             title = message.data.get('sound')
@@ -128,14 +129,15 @@ class WhiteNoise(MycroftSkill):
         # Check if there is an expired timer
         now = datetime.now()
         # Calc remaining time and show using faceplate
-        if (self.timer["expires"] > now and self.stopped == False):
-            # Timer still running
-            remaining = (self.timer["expires"] - now).seconds
-            print (remaining)
-            self.cancel_scheduled_event('ShowTimer')
-            self.schedule_repeating_event(self.update_time,
-                                          None, 1,
-                                          name='ShowTimer')
+        if (self.timer["expires"] > now):
+            if self.stopped == False:
+                # Timer still running
+                remaining = (self.timer["expires"] - now).seconds
+                print (remaining)
+                self.cancel_scheduled_event('ShowTimer')
+                self.schedule_repeating_event(self.update_time,
+                                              None, 1,
+                                              name='ShowTimer')
         else:
             # Timer has expired but not been cleared, flash eyes
             overtime = (now - self.timer["expires"]).seconds
