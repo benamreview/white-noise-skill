@@ -105,12 +105,14 @@ class WhiteNoise(MycroftSkill):
             self.process = play_wav(story_file)
     #Handles Loop Call
     @intent_file_handler('whitenoiseloop.intent')
-    def handle_stories_bedtime(self, message):
+    def handle_loop_whitenoise(self, message):
         print("inside loop handler")
         wait_while_speaking()
         print (message.data.get('sound'))
         utt = normalize(message.data.get('utterance', "").lower())
+        print (utt)
         extract = extract_datetime(utt)
+        print (extract)
         if extract:
             dt = extract[0]
             utt = extract[1]
