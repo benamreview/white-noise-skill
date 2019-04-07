@@ -36,6 +36,7 @@ import wave
 import contextlib
 import pytz
 import math
+import time
 
 class WhiteNoise(MycroftSkill):
     def __init__(self):
@@ -121,7 +122,7 @@ class WhiteNoise(MycroftSkill):
             self.endtime = extract[0]
             utt = extract[1]
         utc=pytz.UTC
-        if (utc.localize(datetime.now()) < self.endtime):
+        while (utc.localize(datetime.now()) < self.endtime):
             print("Current Time:" )
             print(utc.localize(datetime.now()))
             print(self.endtime)
@@ -149,11 +150,15 @@ class WhiteNoise(MycroftSkill):
                     rate = f.getframerate()
                     duration = frames / float(rate)
                     print(duration)
-                    self.cancel_scheduled_event('loop_whitenoise')
-                    self.schedule_event(self.handle_loop_whitenoise,
-                    datetime.now() + timedelta(
-                    seconds=math.ceil(duration)),
-                    name='loop_whitenoise')
+                    time.sleep(duration)
+##                    self.cancel_scheduled_event('loop_whitenoise')
+##                    self.schedule_event(self.handle_loop_whitenoise,
+##                    datetime.now() + timedelta(
+##                    seconds=math.ceil(duration)),
+##                    name='loop_whitenoise')
+                
+                    
+        stop(self)
 
 
 ##    #Pick story by title
