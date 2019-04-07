@@ -138,7 +138,6 @@ class WhiteNoise(MycroftSkill):
                 rate = f.getframerate()
                 duration = frames / float(rate)
                 print(duration)
-                time.sleep(duration)
 ##                    self.cancel_scheduled_event('loop_whitenoise')
 ##                    self.schedule_event(self.handle_loop_whitenoise,
 ##                    datetime.now() + timedelta(
