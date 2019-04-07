@@ -54,13 +54,6 @@ class WhiteNoise(MycroftSkill):
             self.settings["gender"] = "male"
         else:
             self.settings["gender"] = "robot"
-        #Build play list
-        self.play_list = {
-            'ocean': join(abspath(dirname(__file__)), 'sound', 'ocean.wav'),    
-            'wind': join(abspath(dirname(__file__)), 'sound', 'wind.wav'),
-            'train': join(abspath(dirname(__file__)), 'sound', 'rain.wav'),
-        
-        }
 
     def initialize(self):
         sounds_dir = join(self.settings["sounds_dir"], "male")
@@ -78,6 +71,13 @@ class WhiteNoise(MycroftSkill):
                                 ".wav" in sound or ".mp3" in sound]
         # stop laughs for speech execution
         self.add_event("speak", self.stop_laugh)
+        #Build play list
+        self.play_list = {
+            'ocean': join(abspath(dirname(__file__)), 'sound', 'ocean.wav'),    
+            'wind': join(abspath(dirname(__file__)), 'sound', 'wind.wav'),
+            'train': join(abspath(dirname(__file__)), 'sound', 'rain.wav'),
+        
+        }
         
     #Play random story from list
     @intent_file_handler('noise.white.intent')
