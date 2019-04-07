@@ -98,8 +98,8 @@ class WhiteNoise(MycroftSkill):
             if score[1] > 0.5:
                 self.process = play_wav(score[0])
             else:
-                return None
                 self.speak('Sorry I could not find that sound in my library')
+                return None            
         else:
             print("inside None")
             story_file = list(self.play_list.values())
