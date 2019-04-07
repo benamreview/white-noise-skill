@@ -183,7 +183,9 @@ class WhiteNoise(MycroftSkill):
             self.process.terminate()
             return True
         return False
-
+    @intent_handler(IntentBuilder("")
+      .require("Stop")
+    )
     def stop(self):
         # abort current laugh
         stopped = self.stop_laugh()
