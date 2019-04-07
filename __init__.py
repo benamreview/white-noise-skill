@@ -155,7 +155,7 @@ class WhiteNoise(MycroftSkill):
             utt = extract[1]
         utc=pytz.UTC
         print("Current Duration:" )
-        secs = self.endtime.total_seconds())
+        secs = self.endtime.total_seconds()
         now = datetime.now()
         time_expires = now + timedelta(seconds=secs)
         self.timer = {"
