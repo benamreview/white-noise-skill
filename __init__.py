@@ -96,11 +96,11 @@ class WhiteNoise(MycroftSkill):
                 self.process = play_wav(score[0])
                 fname = sound[0]
                 with contextlib.closing(wave.open(fname,'r')) as f:
-                frames = f.getnframes()
-                rate = f.getframerate()
-                duration = frames / float(rate)
-                self.song_length = duration
-                print(duration)
+                    frames = f.getnframes()
+                    rate = f.getframerate()
+                    duration = frames / float(rate)
+                    self.song_length = duration
+                    print(duration)
             else:
                 return None
                 self.speak('Sorry I could not find that sound in my library')
@@ -120,8 +120,8 @@ class WhiteNoise(MycroftSkill):
                 self.audio_length = duration
                 print(duration)
                 self.songTimer = {
-                "file": sound_file,
-                "expires": now + timedelta(seconds=self.audio_length)
+                    "file": sound_file,
+                    "expires": now + timedelta(seconds=self.audio_length)
                 }
         
         #Extract Time and Duration of Audio Play
