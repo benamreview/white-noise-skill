@@ -102,7 +102,7 @@ class WhiteNoise(MycroftSkill):
                     self.song_length = duration
                     print(duration)
                     self.songTimer = {
-                    "file": sound_file,
+                    "file": fname,
                     "expires": now + timedelta(seconds=self.audio_length)
                     }
                     self.check_replay(None)
@@ -125,7 +125,7 @@ class WhiteNoise(MycroftSkill):
                 self.audio_length = duration
                 print(duration)
                 self.songTimer = {
-                    "file": sound_file,
+                    "file": fname,
                     "expires": now + timedelta(seconds=self.audio_length)
                 }
                 self.check_replay(None)
