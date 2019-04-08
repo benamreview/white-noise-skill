@@ -196,6 +196,7 @@ class WhiteNoise(MycroftSkill):
             self.cancel_scheduled_event('Replay')
             sound_file = self.songTimer["file"]
             self.process = play_wav(sound_file)
+            fname = sound_file
             with contextlib.closing(wave.open(fname,'r')) as f:
                 frames = f.getnframes()
                 rate = f.getframerate()
@@ -203,7 +204,7 @@ class WhiteNoise(MycroftSkill):
                 self.audio_length = duration
                 print(duration)
                 self.songTimer = {
-                "file": sound_file,
+                "file": fname,
                 "expires": now + timedelta(seconds=self.audio_length)
                 }
             self.schedule_repeating_event(self.check_replay,
