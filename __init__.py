@@ -68,6 +68,19 @@ class WhiteNoise(MycroftSkill):
             print(score)
             if score[1] > 0.5:
                 self.process = play_wav(score[0])
+                fname = score[0]
+                #Loop Infinitely
+                with contextlib.closing(wave.open(fname,'r')) as f:
+                    frames = f.getnframes()
+                    rate = f.getframerate()
+                    duration = frames / float(rate)
+                    self.audio_length = duration
+                    print(duration)
+                    self.songTimer = {
+                        "file": fname,
+                        "expires": now + timedelta(seconds=self.audio_length)
+                    }
+                    self.check_replay(None)
             else:
                 self.speak('Sorry I could not find that sound in my library')
                 return None            
@@ -79,6 +92,19 @@ class WhiteNoise(MycroftSkill):
             #if os.path.isfile(sound_file):
             wait_while_speaking()
             self.process = play_wav(sound_file)
+            #Loop Infinitely
+            fname = sound_file
+            with contextlib.closing(wave.open(fname,'r')) as f:
+                frames = f.getnframes()
+                rate = f.getframerate()
+                duration = frames / float(rate)
+                self.audio_length = duration
+                print(duration)
+                self.songTimer = {
+                    "file": fname,
+                    "expires": now + timedelta(seconds=self.audio_length)
+                }
+                self.check_replay(None)
     #Handles Loop Call
     @intent_file_handler('whitenoiseloop.intent')
     def handle_loop_whitenoise(self, message):
@@ -99,11 +125,11 @@ class WhiteNoise(MycroftSkill):
                     frames = f.getnframes()
                     rate = f.getframerate()
                     duration = frames / float(rate)
-                    self.song_length = duration
+                    self.audio_length = duration
                     print(duration)
                     self.songTimer = {
-                    "file": fname,
-                    "expires": now + timedelta(seconds=self.audio_length)
+                        "file": fname,
+                        "expires": now + timedelta(seconds=self.audio_length)
                     }
                     self.check_replay(None)
             else:
@@ -192,22 +218,13 @@ class WhiteNoise(MycroftSkill):
                 # Timer has expired but not been cleared, flash eyes
                 overtime = (now - self.songTimer["expires"]).seconds
                 print (overtime)
-                if (self.stopped == False):
-                    self.speak("Audio is over! Looping")
                 self.cancel_scheduled_event('Replay')
                 sound_file = self.songTimer["file"]
                 self.process = play_wav(sound_file)
-                fname = sound_file
-                with contextlib.closing(wave.open(fname,'r')) as f:
-                    frames = f.getnframes()
-                    rate = f.getframerate()
-                    duration = frames / float(rate)
-                    self.audio_length = duration
-                    print(duration)
-                    self.songTimer = {
+                self.songTimer = {
                     "file": fname,
                     "expires": now + timedelta(seconds=self.audio_length)
-                    }
+                }
                 self.schedule_repeating_event(self.check_replay,
                                                   None, 1,
                                                   name='Replay')
