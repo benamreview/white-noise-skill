@@ -51,6 +51,7 @@ class WhiteNoise(MycroftSkill):
             'ocean': join(abspath(dirname(__file__)), 'sounds', 'ocean.wav'),    
             'wind': join(abspath(dirname(__file__)), 'sounds', 'wind.wav'),
             'train': join(abspath(dirname(__file__)), 'sounds', 'rain.wav'),
+            'kid-laugh': join(abspath(dirname(__file__)), 'sounds', 'kid-laugh.wav')
         
         }
         
