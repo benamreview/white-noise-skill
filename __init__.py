@@ -222,7 +222,7 @@ class WhiteNoise(MycroftSkill):
                 sound_file = self.songTimer["file"]
                 self.process = play_wav(sound_file)
                 self.songTimer = {
-                    "file": fname,
+                    "file": sound_file,
                     "expires": now + timedelta(seconds=self.audio_length)
                 }
                 self.schedule_repeating_event(self.check_replay,
