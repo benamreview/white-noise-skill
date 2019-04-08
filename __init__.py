@@ -177,39 +177,43 @@ class WhiteNoise(MycroftSkill):
         print("inside check_replay")
         # Check if there is an expired timer
         now = datetime.now()
-        # Calc remaining time and show using faceplate
-        if (self.songTimer["expires"] > now):
-            if self.stopped == False:
-                # Timer still running
-                remaining = (self.timer["expires"] - now).seconds
-                print (remaining)
+        if self.stopped == False:
+            # Calc remaining time and show using faceplate
+            if (self.songTimer["expires"] > now):
+                if self.stopped == False:
+                    # Timer still running
+                    remaining = (self.timer["expires"] - now).seconds
+                    print (remaining)
+                    self.cancel_scheduled_event('Replay')
+                    self.schedule_repeating_event(self.check_replay,
+                                                  None, 1,
+                                                  name='Replay')
+            else:
+                # Timer has expired but not been cleared, flash eyes
+                overtime = (now - self.songTimer["expires"]).seconds
+                print (overtime)
+                if (self.stopped == False):
+                    self.speak("Audio is over! Looping")
                 self.cancel_scheduled_event('Replay')
+                sound_file = self.songTimer["file"]
+                self.process = play_wav(sound_file)
+                fname = sound_file
+                with contextlib.closing(wave.open(fname,'r')) as f:
+                    frames = f.getnframes()
+                    rate = f.getframerate()
+                    duration = frames / float(rate)
+                    self.audio_length = duration
+                    print(duration)
+                    self.songTimer = {
+                    "file": fname,
+                    "expires": now + timedelta(seconds=self.audio_length)
+                    }
                 self.schedule_repeating_event(self.check_replay,
-                                              None, 1,
-                                              name='Replay')
+                                                  None, 1,
+                                                  name='Replay')
         else:
-            # Timer has expired but not been cleared, flash eyes
-            overtime = (now - self.songTimer["expires"]).seconds
-            print (overtime)
-            if (self.stopped == False):
-                self.speak("Audio is over! Looping")
             self.cancel_scheduled_event('Replay')
-            sound_file = self.songTimer["file"]
-            self.process = play_wav(sound_file)
-            fname = sound_file
-            with contextlib.closing(wave.open(fname,'r')) as f:
-                frames = f.getnframes()
-                rate = f.getframerate()
-                duration = frames / float(rate)
-                self.audio_length = duration
-                print(duration)
-                self.songTimer = {
-                "file": fname,
-                "expires": now + timedelta(seconds=self.audio_length)
-                }
-            self.schedule_repeating_event(self.check_replay,
-                                              None, 1,
-                                              name='Replay')    
+            stop()
     def stop_playing(self):
         if self.process is not None:
             self.process.terminate()
