@@ -50,7 +50,9 @@ class WhiteNoise(MycroftSkill):
         self.play_list = {
             'ocean': join(abspath(dirname(__file__)), 'sounds', 'ocean.wav'),    
             'wind': join(abspath(dirname(__file__)), 'sounds', 'wind.wav'),
-            'rain': join(abspath(dirname(__file__)), 'sounds', 'rain.wav'), 
+            'rain': join(abspath(dirname(__file__)), 'sounds', 'rain.wav'),
+            'hey 1': join(abspath(dirname(__file__)), 'sounds', 'hey1.wav'),
+            'hey 2': join(abspath(dirname(__file__)), 'sounds', 'hey2.wav')
         }
         
     #Play random noise or a specific noise from list
