@@ -123,6 +123,7 @@ class WhiteNoise(MycroftSkill):
                     "file": sound_file,
                     "expires": now + timedelta(seconds=self.audio_length)
                 }
+                self.check_replay(None)
         
         #Extract Time and Duration of Audio Play
         utt = normalize(message.data.get('utterance', "").lower())
@@ -142,7 +143,7 @@ class WhiteNoise(MycroftSkill):
                  "expires": time_expires
                  } 
         self.update_time(None)
-        self.check_replay(None)
+        
                 
                     
     def update_time(self, message):
