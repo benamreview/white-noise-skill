@@ -60,6 +60,7 @@ class WhiteNoise(MycroftSkill):
     def handle_single_whitenoise(self, message):
         print("inside handler")
         wait_while_speaking()
+        self.stopped = False;
         now = datetime.now()
         print (message.data.get('sound'))
         if message.data.get('sound') is not None:
