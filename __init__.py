@@ -101,6 +101,7 @@ class WhiteNoise(MycroftSkill):
                     duration = frames / float(rate)
                     self.song_length = duration
                     print(duration)
+                    self.check_replay(None)
             else:
                 return None
                 self.speak('Sorry I could not find that sound in my library')
