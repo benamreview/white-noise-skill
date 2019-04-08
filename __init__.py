@@ -208,7 +208,7 @@ class WhiteNoise(MycroftSkill):
             if (self.songTimer["expires"] > now):
                 if self.stopped == False:
                     # Timer still running
-                    remaining = (self.timer["expires"] - now).seconds
+                    remaining = (self.songTimer["expires"] - now).seconds
                     print (remaining)
                     self.cancel_scheduled_event('Replay')
                     self.schedule_repeating_event(self.check_replay,
