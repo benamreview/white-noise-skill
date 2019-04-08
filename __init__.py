@@ -213,7 +213,7 @@ class WhiteNoise(MycroftSkill):
                                                   name='Replay')
         else:
             self.cancel_scheduled_event('Replay')
-            stop()
+            self.stop()
     def stop_playing(self):
         if self.process is not None:
             self.process.terminate()
