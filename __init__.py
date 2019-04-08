@@ -94,7 +94,7 @@ class WhiteNoise(MycroftSkill):
             print(score)
             if score[1] > 0.5:
                 self.process = play_wav(score[0])
-                fname = sound[0]
+                fname = score[0]
                 with contextlib.closing(wave.open(fname,'r')) as f:
                     frames = f.getnframes()
                     rate = f.getframerate()
