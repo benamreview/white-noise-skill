@@ -189,7 +189,7 @@ class WhiteNoise(MycroftSkill):
                                               name='Replay')
         else:
             # Timer has expired but not been cleared, flash eyes
-            overtime = (now - self.timer["expires"]).seconds
+            overtime = (now - self.songTimer["expires"]).seconds
             print (overtime)
             if (self.stopped == False):
                 self.speak("Audio is over! Looping")
